@@ -24,7 +24,7 @@ export function createApiRouter(services: Services): Router {
     res.json(openApiDocument);
   });
   router.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
-  router.use('/products', createProductRouter(services.catalogueService));
+  router.use(createProductRouter(services.catalogueService));
   router.use('/categories', createCategoryRouter(services.catalogueService));
   router.use('/enquiries', createEnquiryRouter(services.enquiryService));
 

@@ -17,8 +17,8 @@ describe('api client', () => {
   it('calls our own /api and returns the JSON body', async () => {
     const fetchMock = stubFetch(Response.json([{ id: '1' }]));
 
-    await expect(apiGet('/products/top-rated')).resolves.toEqual([{ id: '1' }]);
-    expect(fetchMock).toHaveBeenCalledWith('/api/products/top-rated', undefined);
+    await expect(apiGet('/top-rated')).resolves.toEqual([{ id: '1' }]);
+    expect(fetchMock).toHaveBeenCalledWith('/api/top-rated', undefined);
   });
 
   it('sends JSON when posting', async () => {
@@ -45,7 +45,7 @@ describe('api client', () => {
   it('uses a friendly message when the error did not come from our API', async () => {
     stubFetch(new Response('<html>Bad Gateway</html>', { status: 502 }));
 
-    await expect(apiGet('/products/top-rated')).rejects.toMatchObject({
+    await expect(apiGet('/top-rated')).rejects.toMatchObject({
       status: 502,
       message: 'Something went wrong. Please try again.',
     });
@@ -54,7 +54,7 @@ describe('api client', () => {
   it('explains when the server cannot be reached', async () => {
     stubFetch(new TypeError('Failed to fetch'));
 
-    await expect(apiGet('/products/top-rated')).rejects.toMatchObject({
+    await expect(apiGet('/top-rated')).rejects.toMatchObject({
       status: 0,
       message: 'We could not reach the server. Check your connection and try again.',
     });

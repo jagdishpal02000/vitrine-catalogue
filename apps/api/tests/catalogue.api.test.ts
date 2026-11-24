@@ -4,11 +4,11 @@ import { AppError } from '../src/utils/errors.js';
 import { mensJacket, mensTShirt, silverBracelet, womensRainJacket } from './fixtures.js';
 import { createTestApp } from './helpers.js';
 
-describe('GET /api/products/top-rated', () => {
+describe('GET /api/top-rated', () => {
   it("returns the owner's picks in order", async () => {
     const app = createTestApp({ topRatedIds: ['5', '1'] });
 
-    const response = await request(app).get('/api/products/top-rated');
+    const response = await request(app).get('/api/top-rated');
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual([silverBracelet, mensJacket]);
@@ -20,25 +20,25 @@ describe('GET /api/products/top-rated', () => {
         Promise.reject(new AppError(502, 'UPSTREAM_UNAVAILABLE', 'Service unavailable')),
     });
 
-    const response = await request(app).get('/api/products/top-rated');
+    const response = await request(app).get('/api/top-rated');
 
     expect(response.status).toBe(502);
     expect(response.body).toMatchObject({ error: { code: 'UPSTREAM_UNAVAILABLE' } });
   });
 });
 
-describe('GET /api/products/search', () => {
+describe('GET /api/search', () => {
   const app = createTestApp();
 
   it('returns only the products that match the term', async () => {
-    const response = await request(app).get('/api/products/search').query({ q: 'jacket' });
+    const response = await request(app).get('/api/search').query({ q: 'jacket' });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual([mensJacket, womensRainJacket]);
   });
 
   it('rejects an empty term with a 400', async () => {
-    const response = await request(app).get('/api/products/search').query({ q: '  ' });
+    const response = await request(app).get('/api/search').query({ q: '  ' });
 
     expect(response.status).toBe(400);
     expect(response.body).toMatchObject({
@@ -51,7 +51,7 @@ describe('GET /api/products/search', () => {
 
   it('rejects a term longer than 100 characters', async () => {
     const response = await request(app)
-      .get('/api/products/search')
+      .get('/api/search')
       .query({ q: 'a'.repeat(101) });
 
     expect(response.status).toBe(400);
@@ -73,6 +73,14 @@ describe('GET /api/products/:id', () => {
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ error: { code: 'NOT_FOUND', message: 'Product not found' } });
+  });
+
+  it('has no reserved IDs: "top-rated" and "search" are just unknown products', async () => {
+    for (const id of ['top-rated', 'search']) {
+      const response = await request(app).get(`/api/products/${id}`);
+
+      expect(response.status).toBe(404);
+    }
   });
 });
 

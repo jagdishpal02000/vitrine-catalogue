@@ -12,8 +12,8 @@ describe('API docs', () => {
     expect(response.body).toMatchObject({ openapi: '3.0.3', info: { title: 'Vitrine API' } });
     for (const path of [
       '/health',
-      '/products/top-rated',
-      '/products/search',
+      '/top-rated',
+      '/search',
       '/products/{id}',
       '/categories',
       '/categories/{slug}/products',

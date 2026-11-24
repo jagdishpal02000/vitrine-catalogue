@@ -46,13 +46,16 @@ Base path `/api`. Every response is JSON. Interactive docs: `/api/docs` (OpenAPI
 
 | Method and path                  | Success                              | Errors             | Used by                                |
 | -------------------------------- | ------------------------------------ | ------------------ | -------------------------------------- |
-| `GET /products/top-rated`        | `200 Product[]` in the owner's order |                    | Home                                   |
-| `GET /products/search?q=term`    | `200 Product[]`                      | 400                | Search                                 |
+| `GET /top-rated`                 | `200 Product[]` in the owner's order |                    | Home                                   |
+| `GET /search?q=term`             | `200 Product[]`                      | 400                | Search                                 |
 | `GET /products/:id`              | `200 Product`                        | 404                | Product page                           |
 | `GET /categories`                | `200 Category[]`                     |                    | Navigation                             |
 | `GET /categories/:slug/products` | `200 { category, topRated, others }` | 404                | Category page                          |
 | `POST /enquiries`                | `202 { message }`                    | 400, 404, 429, 502 | Enquiry form                           |
 | `GET /health`                    | `200 { status: "ok" }`               |                    | Docker and load-balancer health checks |
+
+Top rated and search sit outside `/products/` on purpose: product IDs are opaque strings, so `/products/:id`
+must not reserve words such as `search`. Every upstream-backed endpoint can also return `502`.
 
 Every error has one shape, produced only by the global error handler:
 

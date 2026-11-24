@@ -36,7 +36,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: 'get',
-  path: '/products/top-rated',
+  path: '/top-rated',
   tags: ['Products'],
   summary: "The business owner's top-rated picks, in display order (home page)",
   responses: {
@@ -47,7 +47,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: 'get',
-  path: '/products/search',
+  path: '/search',
   tags: ['Products'],
   summary: 'Products whose title, description or category match every word of the term',
   request: { query: searchQuerySchema },
