@@ -61,6 +61,11 @@ textarea {
   outline-offset: 2px;
 }
 
+/* Category names arrive lower-case from the data source. */
+.capitalize {
+  text-transform: capitalize;
+}
+
 /* Hidden on screen but still read by screen readers. */
 .visually-hidden {
   position: absolute;

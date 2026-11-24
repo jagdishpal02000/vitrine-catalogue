@@ -1,13 +1,21 @@
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from './components/Layout';
+import { CategoryPage } from './pages/CategoryPage';
+import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { SearchPage } from './pages/SearchPage';
 
 /** Every page of the app. Exported separately so tests can render the real routes in memory. */
 export const routes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
-    children: [{ path: '*', element: <NotFoundPage /> }],
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: 'categories/:slug', element: <CategoryPage /> },
+      { path: 'search', element: <SearchPage /> },
+      { path: '*', element: <NotFoundPage /> },
+    ],
   },
 ];
 
