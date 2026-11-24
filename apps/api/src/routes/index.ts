@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import { openApiDocument } from '../docs/openapi.js';
 import type { CatalogueService } from '../services/catalogue.service.js';
 import type { EnquiryService } from '../services/enquiry.service.js';
 import { createCategoryRouter } from './category.routes.js';
@@ -18,6 +20,10 @@ export function createApiRouter(services: Services): Router {
   router.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
+  router.get('/docs.json', (_req, res) => {
+    res.json(openApiDocument);
+  });
+  router.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
   router.use('/products', createProductRouter(services.catalogueService));
   router.use('/categories', createCategoryRouter(services.catalogueService));
   router.use('/enquiries', createEnquiryRouter(services.enquiryService));
