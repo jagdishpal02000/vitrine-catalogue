@@ -19,6 +19,7 @@ const envSchema = z.object({
   // How many reverse proxies sit in front of the API (nginx in Docker), so rate limits see the real client IP.
   TRUST_PROXY: z.coerce.number().int().min(0).default(0),
   CORS_ORIGINS: commaSeparated('http://localhost:5173,http://localhost:8080'),
+  FAKE_STORE_BASE_URL: z.url().default('https://fakestoreapi.com'),
 });
 
 function loadConfig() {

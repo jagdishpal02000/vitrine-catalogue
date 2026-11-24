@@ -1,6 +1,12 @@
 /** Largest JSON request body we accept. An enquiry is well under 1 kB. */
 export const JSON_BODY_LIMIT = '10kb';
 
+/** How long product data from the upstream source is reused before being fetched again. */
+export const PRODUCTS_CACHE_TTL_MS = 5 * 60 * 1000;
+
+/** How long we wait for an upstream service before giving up. */
+export const UPSTREAM_TIMEOUT_MS = 5000;
+
 const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;
 
 /** Requests allowed per client IP in each time window. */
@@ -14,6 +20,7 @@ export const ERROR_CODES = {
   VALIDATION_ERROR: 'VALIDATION_ERROR',
   NOT_FOUND: 'NOT_FOUND',
   RATE_LIMITED: 'RATE_LIMITED',
+  UPSTREAM_UNAVAILABLE: 'UPSTREAM_UNAVAILABLE',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
 } as const;
 
