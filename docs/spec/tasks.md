@@ -23,16 +23,16 @@ Requirement IDs refer to [requirements.md](requirements.md).
 
 ## Web
 
-- [ ] T13 Vite + React app shell, theme tokens, routing
-- [ ] T14 API client and data hooks
-- [ ] T15 Layout: brand, category navigation (R2.1), search bar (R3)
-- [ ] T16 Home (R1), category (R2) and search (R3) pages
-- [ ] T17 Product page (R4) and enquiry form (R5)
-- [ ] T18 Journey tests, one per acceptance criterion
+- [x] T13 Vite + React app shell, theme tokens, routing
+- [x] T14 API client and data hooks
+- [x] T15 Layout: brand, category navigation (R2.1), search bar (R3)
+- [x] T16 Home (R1), category (R2) and search (R3) pages
+- [x] T17 Product page (R4) and enquiry form (R5)
+- [x] T18 Journey tests, one per acceptance criterion
 
 ## Delivery
 
-- [ ] T19 Docker: API and web images, compose with Mailpit, `.env.example`
-- [ ] T20 Docs: README, DECISIONS, AI_USAGE
-- [ ] T21 Independent review pass and fixes
+- [x] T19 Docker: API and web images, compose with Mailpit, `.env.example`
+- [x] T20 Docs: README, DECISIONS, AI_USAGE
+- [x] T21 Independent review pass and fixes
 - [ ] T22 Pull request into `main`
