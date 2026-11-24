@@ -20,6 +20,8 @@ const envSchema = z.object({
   TRUST_PROXY: z.coerce.number().int().min(0).default(0),
   CORS_ORIGINS: commaSeparated('http://localhost:5173,http://localhost:8080'),
   FAKE_STORE_BASE_URL: z.url().default('https://fakestoreapi.com'),
+  // The business owner's "top rated" picks, in display order. Defaults to the 5 best-rated Fake Store products.
+  TOP_RATED_PRODUCT_IDS: commaSeparated('12,11,3,18,5'),
 });
 
 function loadConfig() {

@@ -36,6 +36,9 @@ export const womensRainJacket = product(
 export const goldRing = product('4', 'Gold Plated Ring', 'jewelery', 3.0);
 export const silverBracelet = product('5', 'Silver Dragon Bracelet', 'jewelery', 4.6);
 export const hardDrive = product('6', 'Portable Hard Drive', 'electronics', 2.9);
+export const usbCable = product('7', 'Braided USB Cable', 'electronics', 4.0);
+export const monitor = product('8', 'Curved Gaming Monitor', 'electronics', 3.5);
+export const keyboard = product('9', 'Mechanical Keyboard', 'electronics', 4.4);
 
 export const products = [
   mensJacket,
@@ -44,4 +47,7 @@ export const products = [
   goldRing,
   silverBracelet,
   hardDrive,
+  usbCable,
+  monitor,
+  keyboard,
 ];

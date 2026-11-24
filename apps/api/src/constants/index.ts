@@ -7,6 +7,9 @@ export const PRODUCTS_CACHE_TTL_MS = 5 * 60 * 1000;
 /** How long we wait for an upstream service before giving up. */
 export const UPSTREAM_TIMEOUT_MS = 5000;
 
+/** Top-rated products shown on a category page when the owner picked none in that category. */
+export const CATEGORY_TOP_RATED_FALLBACK_COUNT = 3;
+
 const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;
 
 /** Requests allowed per client IP in each time window. */

@@ -18,5 +18,12 @@ export const productSchema = z.object({
   rating: z.object({ average: z.number(), count: z.number() }).optional(),
 });
 
+export const categoryPageSchema = z.object({
+  category: categorySchema,
+  topRated: z.array(productSchema),
+  others: z.array(productSchema),
+});
+
 export type Category = z.infer<typeof categorySchema>;
 export type Product = z.infer<typeof productSchema>;
+export type CategoryPage = z.infer<typeof categoryPageSchema>;
