@@ -1,0 +1,38 @@
+# Tasks
+
+The implementation plan, in order. Each task is a small, reviewable slice with its own commit(s).
+Requirement IDs refer to [requirements.md](requirements.md).
+
+## Foundations
+
+- [ ] T1 Spec: requirements, design, tasks
+- [ ] T2 Agent instructions: `AGENTS.md`, `CLAUDE.md`
+- [ ] T3 Tooling: npm workspaces, TypeScript, Prettier, ESLint, Husky, lint-staged, commitlint
+- [ ] T4 CI: lint, format, typecheck, test and build on every pull request
+
+## API
+
+- [ ] T5 Express app: env config, logger, error handling, health check
+- [ ] T6 Middleware: zod request validation, rate limiting
+- [ ] T7 Search matching rules (R3.1) — tests first
+- [ ] T8 Product repository: Fake Store adapter, in-memory queries, cache
+- [ ] T9 Catalogue service: top rated (R1), category page (R2), search (R3), product (R4) — tests first
+- [ ] T10 Product and category endpoints
+- [ ] T11 Enquiry endpoint: validation, email, rate limit (R5) — tests first
+- [ ] T12 OpenAPI docs and Swagger UI
+
+## Web
+
+- [ ] T13 Vite + React app shell, theme tokens, routing
+- [ ] T14 API client and data hooks
+- [ ] T15 Layout: brand, category navigation (R2.1), search bar (R3)
+- [ ] T16 Home (R1), category (R2) and search (R3) pages
+- [ ] T17 Product page (R4) and enquiry form (R5)
+- [ ] T18 Journey tests, one per acceptance criterion
+
+## Delivery
+
+- [ ] T19 Docker: API and web images, compose with Mailpit, `.env.example`
+- [ ] T20 Docs: README, DECISIONS, AI_USAGE
+- [ ] T21 Independent review pass and fixes
+- [ ] T22 Pull request into `main`
