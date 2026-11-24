@@ -51,3 +51,7 @@ People should start with [README.md](README.md). The spec is in [docs/spec](docs
 - TypeScript is pinned to 6.0.x because typescript-eslint does not support TypeScript 7 yet.
 - API imports use `.js` extensions (Node ESM), even when importing `.ts` files.
 - Several dependencies are newer than most models' training data (React Router 8, Vite 8, Vitest 5, ESLint 10, nodemailer 10). Check the installed types, not memory.
+- React 19 types: form handlers take `SubmitEvent`. `FormEvent` is deprecated and fails lint.
+- Browsers compile the `pattern` attribute with the RegExp `v` flag, so escape `(`, `)` and `-` inside character classes, or the pattern is silently ignored.
+- zod-to-openapi: name schemas with zod's `.meta({ id })`. `extendZodWithOpenApi` only reaches schemas created after it runs.
+- Keep `/products/:id` free of fixed sub-paths. Product IDs are opaque strings, so lists live elsewhere (`/top-rated`, `/search`).
