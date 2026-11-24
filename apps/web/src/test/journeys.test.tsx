@@ -111,3 +111,67 @@ describe('search (R3)', () => {
     ).toBeVisible();
   });
 });
+
+describe('product page (R4)', () => {
+  it('shows the product details after clicking a product tile', async () => {
+    vi.spyOn(catalogueApi, 'getProduct').mockResolvedValue(jacket);
+    const user = userEvent.setup();
+    renderRoute('/');
+
+    await user.click(await screen.findByRole('link', { name: /Mens Cotton Jacket/ }));
+
+    expect(await screen.findByRole('heading', { level: 1, name: jacket.title })).toBeVisible();
+    expect(screen.getByText('US$55.99')).toBeVisible();
+    expect(screen.getByText(jacket.description)).toBeVisible();
+    expect(catalogueApi.getProduct).toHaveBeenCalledWith(jacket.id);
+  });
+
+  it('says so when the product does not exist', async () => {
+    vi.spyOn(catalogueApi, 'getProduct').mockRejectedValue(new ApiError(404, 'Product not found'));
+
+    renderRoute('/products/999');
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Product not found');
+  });
+});
+
+describe('enquiry (R5)', () => {
+  async function fillInEnquiry() {
+    const user = userEvent.setup();
+    vi.spyOn(catalogueApi, 'getProduct').mockResolvedValue(jacket);
+    renderRoute(`/products/${jacket.id}`);
+
+    await user.click(await screen.findByRole('button', { name: 'Enquire' }));
+    await user.type(screen.getByLabelText('Name'), 'Ada Lovelace');
+    await user.type(screen.getByLabelText('Email'), 'ada@example.com');
+    await user.type(screen.getByLabelText('Message (optional)'), 'Is it waterproof?');
+    await user.click(screen.getByRole('button', { name: 'Send enquiry' }));
+  }
+
+  it('sends the contact details and thanks the customer', async () => {
+    vi.spyOn(catalogueApi, 'sendEnquiry').mockResolvedValue({ message: 'Thank you.' });
+
+    await fillInEnquiry();
+
+    expect(await screen.findByRole('status')).toHaveTextContent('Thank you!');
+    expect(catalogueApi.sendEnquiry).toHaveBeenCalledWith({
+      productId: jacket.id,
+      name: 'Ada Lovelace',
+      email: 'ada@example.com',
+      phone: undefined,
+      message: 'Is it waterproof?',
+    });
+  });
+
+  it('shows the error, and no thank-you, when the enquiry cannot be sent', async () => {
+    vi.spyOn(catalogueApi, 'sendEnquiry').mockRejectedValue(
+      new ApiError(502, 'We could not send your enquiry. Please try again.'),
+    );
+
+    await fillInEnquiry();
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('We could not send your enquiry');
+    expect(screen.queryByText(/Thank you/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Send enquiry' })).toBeEnabled();
+  });
+});

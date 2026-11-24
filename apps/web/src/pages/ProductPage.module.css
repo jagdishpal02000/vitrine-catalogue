@@ -1,0 +1,24 @@
+.product {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.image {
+  width: 100%;
+  max-height: 32rem;
+  padding: var(--space-6);
+  object-fit: contain;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.rating {
+  color: var(--color-text-muted);
+}
