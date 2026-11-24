@@ -32,6 +32,13 @@ jobs:
       - run: npm test
       - run: npm run build
 
+  docker:
+    name: Docker images build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker compose build
+
   commitlint:
     name: Conventional commit messages
     if: github.event_name == 'pull_request'
