@@ -16,11 +16,11 @@ export function createCatalogueService(
     /** Home page: the owner's picks, in order. Picks that no longer exist are skipped, not fatal. */
     async getTopRatedProducts(): Promise<Product[]> {
       const picks = await Promise.all(topRatedIds.map((id) => productRepository.findById(id)));
-      const found = picks.filter((product) => product !== undefined);
-      if (found.length < topRatedIds.length) {
-        logger.warn(`Some top-rated product IDs were not found: ${topRatedIds.join(', ')}`);
+      const missingIds = topRatedIds.filter((_id, index) => picks[index] === undefined);
+      if (missingIds.length > 0) {
+        logger.warn(`Top-rated product IDs not found: ${missingIds.join(', ')}`);
       }
-      return found;
+      return picks.filter((product) => product !== undefined);
     },
 
     /**

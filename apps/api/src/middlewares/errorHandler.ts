@@ -23,12 +23,8 @@ export const errorHandler: ErrorRequestHandler = (error: unknown, req, res, next
 function toAppError(error: unknown, req: Request): AppError {
   if (error instanceof AppError) return error;
 
-  if (isBodyParserError(error)) {
-    return new AppError(
-      error.status,
-      ERROR_CODES.BAD_REQUEST,
-      'The request body could not be read',
-    );
+  if (isClientError(error)) {
+    return new AppError(error.status, ERROR_CODES.BAD_REQUEST, 'The request could not be read');
   }
 
   // Unexpected: log the details for us, return a generic message to the client.
@@ -38,8 +34,11 @@ function toAppError(error: unknown, req: Request): AppError {
   return new AppError(500, ERROR_CODES.INTERNAL_ERROR, 'Something went wrong. Please try again.');
 }
 
-/** express.json() rejects malformed JSON (400) and oversized bodies (413) with an error carrying a 4xx status. */
-function isBodyParserError(error: unknown): error is { status: number } {
+/**
+ * Errors Express raises before our code runs carry a 4xx status: malformed JSON (400),
+ * an oversized body (413) or a URL it cannot decode (400).
+ */
+function isClientError(error: unknown): error is { status: number } {
   return (
     typeof error === 'object' &&
     error !== null &&

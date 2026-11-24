@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { logger } from '../src/infra/logger.js';
 import { createInMemoryProductRepository } from '../src/repositories/inMemory.product.repository.js';
 import { createCatalogueService } from '../src/services/catalogue.service.js';
 import {
@@ -14,6 +15,10 @@ import {
 
 const repository = createInMemoryProductRepository(() => Promise.resolve(products));
 
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe('getTopRatedProducts (home page)', () => {
   it("returns the owner's picks in the owner's order", async () => {
     const service = createCatalogueService(repository, ['5', '1', '6']);
@@ -21,10 +26,12 @@ describe('getTopRatedProducts (home page)', () => {
     expect(await service.getTopRatedProducts()).toEqual([silverBracelet, mensJacket, hardDrive]);
   });
 
-  it('skips picks that no longer exist', async () => {
+  it('skips picks that no longer exist, and logs only the missing IDs', async () => {
+    const warn = vi.spyOn(logger, 'warn');
     const service = createCatalogueService(repository, ['1', '999']);
 
     expect(await service.getTopRatedProducts()).toEqual([mensJacket]);
+    expect(warn).toHaveBeenCalledWith('Top-rated product IDs not found: 999');
   });
 });
 

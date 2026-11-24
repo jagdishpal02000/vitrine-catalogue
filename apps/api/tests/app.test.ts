@@ -31,6 +31,15 @@ describe('app', () => {
     expect(response.body).toMatchObject({ error: { code: 'BAD_REQUEST' } });
   });
 
+  it('rejects a URL that cannot be decoded with a 400, not a 500', async () => {
+    const response = await request(app).get('/api/products/%E0');
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: { code: 'BAD_REQUEST', message: 'The request could not be read' },
+    });
+  });
+
   it('sends security headers and hides the framework', async () => {
     const response = await request(app).get('/api/health');
 

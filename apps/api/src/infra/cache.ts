@@ -17,7 +17,10 @@ export function createMemoryCache(): Cache {
 
       const value = load();
       entries.set(key, { value, expiresAt: Date.now() + ttlMs });
-      value.catch(() => entries.delete(key));
+      value.catch(() => {
+        // Only evict our own entry: a newer load may already have replaced it.
+        if (entries.get(key)?.value === value) entries.delete(key);
+      });
       return value;
     },
   };
