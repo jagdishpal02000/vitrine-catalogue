@@ -6,9 +6,11 @@ interface QueryStatusProps<T> {
   children: (data: T) => ReactNode;
 }
 
-/** Shows the loading and error states of a query, then renders `children` with its data. */
+/** Renders `children` with a query's data when there is any; otherwise its loading or error state. */
 export function QueryStatus<T>({ query, children }: QueryStatusProps<T>) {
-  if (query.isPending) return <p role="status">Loading…</p>;
+  // Data first: if a background refresh fails we keep what is on screen,
+  // so nothing the customer is using (such as a half-filled enquiry form) disappears.
+  if (query.data !== undefined) return children(query.data);
   if (query.isError) return <p role="alert">{query.error.message}</p>;
-  return children(query.data);
+  return <p role="status">Loading…</p>;
 }
