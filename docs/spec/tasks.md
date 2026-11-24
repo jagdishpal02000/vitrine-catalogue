@@ -5,21 +5,21 @@ Requirement IDs refer to [requirements.md](requirements.md).
 
 ## Foundations
 
-- [ ] T1 Spec: requirements, design, tasks
-- [ ] T2 Agent instructions: `AGENTS.md`, `CLAUDE.md`
-- [ ] T3 Tooling: npm workspaces, TypeScript, Prettier, ESLint, Husky, lint-staged, commitlint
-- [ ] T4 CI: lint, format, typecheck, test and build on every pull request
+- [x] T1 Spec: requirements, design, tasks
+- [x] T2 Agent instructions: `AGENTS.md`, `CLAUDE.md`
+- [x] T3 Tooling: npm workspaces, TypeScript, Prettier, ESLint, Husky, lint-staged, commitlint
+- [x] T4 CI: lint, format, typecheck, test and build on every pull request
 
 ## API
 
-- [ ] T5 Express app: env config, logger, error handling, health check
-- [ ] T6 Middleware: zod request validation, rate limiting
-- [ ] T7 Search matching rules (R3.1) — tests first
-- [ ] T8 Product repository: Fake Store adapter, in-memory queries, cache
-- [ ] T9 Catalogue service: top rated (R1), category page (R2), search (R3), product (R4) — tests first
-- [ ] T10 Product and category endpoints
-- [ ] T11 Enquiry endpoint: validation, email, rate limit (R5) — tests first
-- [ ] T12 OpenAPI docs and Swagger UI
+- [x] T5 Express app: env config, logger, error handling, health check
+- [x] T6 Middleware: zod request validation, rate limiting
+- [x] T7 Search matching rules (R3.1) — tests first
+- [x] T8 Product repository: Fake Store adapter, in-memory queries, cache
+- [x] T9 Catalogue service: top rated (R1), category page (R2), search (R3), product (R4) — tests first
+- [x] T10 Product and category endpoints
+- [x] T11 Enquiry endpoint: validation, email, rate limit (R5) — tests first
+- [x] T12 OpenAPI docs and Swagger UI
 
 ## Web
 
