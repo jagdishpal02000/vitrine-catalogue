@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach } from 'vitest';
+import { afterEach, vi } from 'vitest';
 
 // Vitest runs without globals, so React Testing Library cannot register its own cleanup.
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
 });
