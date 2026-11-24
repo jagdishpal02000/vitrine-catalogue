@@ -20,22 +20,22 @@ API: Express 5 (apps/api)
 
 Each expected change (C7) has one seam:
 
-| Expected change | Seam | What changes |
-|---|---|---|
-| Product data source | `ProductRepository` interface | Add one repository file, wire it in `container.ts` |
-| Email provider | `Mailer` interface, SMTP settings | Usually just env vars (most providers speak SMTP) |
-| Look and feel | `styles/theme.css` design tokens, `config.ts` brand | CSS and components; no data logic |
+| Expected change     | Seam                                                | What changes                                       |
+| ------------------- | --------------------------------------------------- | -------------------------------------------------- |
+| Product data source | `ProductRepository` interface                       | Add one repository file, wire it in `container.ts` |
+| Email provider      | `Mailer` interface, SMTP settings                   | Usually just env vars (most providers speak SMTP)  |
+| Look and feel       | `styles/theme.css` design tokens, `config.ts` brand | CSS and components; no data logic                  |
 
 ## API layers
 
-| Layer | Folder | Responsibility |
-|---|---|---|
-| Routes | `routes/` | Map URLs to controllers; run zod validation and rate limits |
-| Controllers | `controllers/` | Read validated input, call one service, send JSON |
-| Services | `services/` | Business rules (top rated, category split, enquiry email); no Express |
-| Repositories | `repositories/` | The only code that knows the data source |
-| Infra | `infra/` | Logger (winston), cache, HTTP client, mailer |
-| Shared | `config/`, `constants/`, `models/`, `validators/`, `utils/`, `middlewares/` | Env, limits, zod schemas, helpers, cross-cutting middleware |
+| Layer        | Folder                                                                      | Responsibility                                                        |
+| ------------ | --------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Routes       | `routes/`                                                                   | Map URLs to controllers; run zod validation and rate limits           |
+| Controllers  | `controllers/`                                                              | Read validated input, call one service, send JSON                     |
+| Services     | `services/`                                                                 | Business rules (top rated, category split, enquiry email); no Express |
+| Repositories | `repositories/`                                                             | The only code that knows the data source                              |
+| Infra        | `infra/`                                                                    | Logger (winston), cache, HTTP client, mailer                          |
+| Shared       | `config/`, `constants/`, `models/`, `validators/`, `utils/`, `middlewares/` | Env, limits, zod schemas, helpers, cross-cutting middleware           |
 
 Dependencies are passed into factory functions (`createCatalogueService(repository, topRatedIds)`) and wired once in
 `container.ts`. Tests build the same objects with an in-memory repository and a fake mailer.
@@ -44,20 +44,26 @@ Dependencies are passed into factory functions (`createCatalogueService(reposito
 
 Base path `/api`. Every response is JSON. Interactive docs: `/api/docs` (OpenAPI generated from the same zod schemas).
 
-| Method and path | Success | Errors | Used by |
-|---|---|---|---|
-| `GET /products/top-rated` | `200 Product[]` in the owner's order | | Home |
-| `GET /products/search?q=term` | `200 Product[]` | 400 | Search |
-| `GET /products/:id` | `200 Product` | 404 | Product page |
-| `GET /categories` | `200 Category[]` | | Navigation |
-| `GET /categories/:slug/products` | `200 { category, topRated, others }` | 404 | Category page |
-| `POST /enquiries` | `202 { message }` | 400, 404, 429, 502 | Enquiry form |
-| `GET /health` | `200 { status: "ok" }` | | Docker and load-balancer health checks |
+| Method and path                  | Success                              | Errors             | Used by                                |
+| -------------------------------- | ------------------------------------ | ------------------ | -------------------------------------- |
+| `GET /products/top-rated`        | `200 Product[]` in the owner's order |                    | Home                                   |
+| `GET /products/search?q=term`    | `200 Product[]`                      | 400                | Search                                 |
+| `GET /products/:id`              | `200 Product`                        | 404                | Product page                           |
+| `GET /categories`                | `200 Category[]`                     |                    | Navigation                             |
+| `GET /categories/:slug/products` | `200 { category, topRated, others }` | 404                | Category page                          |
+| `POST /enquiries`                | `202 { message }`                    | 400, 404, 429, 502 | Enquiry form                           |
+| `GET /health`                    | `200 { status: "ok" }`               |                    | Docker and load-balancer health checks |
 
 Every error has one shape, produced only by the global error handler:
 
 ```json
-{ "error": { "code": "VALIDATION_ERROR", "message": "Some of the details you sent are not valid", "details": [{ "field": "email", "message": "Enter a valid email address" }] } }
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Some of the details you sent are not valid",
+    "details": [{ "field": "email", "message": "Enter a valid email address" }]
+  }
+}
 ```
 
 Upstream failures (Fake Store or email) return `502` with a friendly message. Internals are logged, never returned.
@@ -104,11 +110,11 @@ no request bodies or personal data in logs · secrets only via env.
 
 ## Testing
 
-| Level | Tool | Covers |
-|---|---|---|
-| API unit | Vitest | search matching, catalogue rules, enquiry email, Fake Store mapping and failures |
-| API HTTP | Vitest + supertest on `createApp()` | every endpoint's success and error paths, error shape, rate limit, docs |
-| Web | Vitest + React Testing Library | one journey per acceptance criterion through the real routes |
+| Level    | Tool                                | Covers                                                                           |
+| -------- | ----------------------------------- | -------------------------------------------------------------------------------- |
+| API unit | Vitest                              | search matching, catalogue rules, enquiry email, Fake Store mapping and failures |
+| API HTTP | Vitest + supertest on `createApp()` | every endpoint's success and error paths, error shape, rate limit, docs          |
+| Web      | Vitest + React Testing Library      | one journey per acceptance criterion through the real routes                     |
 
 ## Running and deploying
 
