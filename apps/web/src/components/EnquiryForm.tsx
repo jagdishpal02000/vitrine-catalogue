@@ -66,7 +66,7 @@ export function EnquiryForm({ product }: { product: Product }) {
           type="tel"
           autoComplete="tel"
           maxLength={30}
-          pattern="[0-9 ()+\-]*"
+          pattern="[0-9 \(\)+\-]*"
           title="Digits, spaces and + ( ) - only"
         />
       </label>
