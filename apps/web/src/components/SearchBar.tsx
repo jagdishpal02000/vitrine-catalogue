@@ -1,12 +1,11 @@
 import { useState, type SubmitEvent } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import styles from './SearchBar.module.css';
 
 /** The search form in the header. Submitting (button or Enter) opens the results page for the term. */
-export function SearchBar() {
+export function SearchBar({ initialTerm }: { initialTerm: string }) {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [term, setTerm] = useState(searchParams.get('q') ?? '');
+  const [term, setTerm] = useState(initialTerm);
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();

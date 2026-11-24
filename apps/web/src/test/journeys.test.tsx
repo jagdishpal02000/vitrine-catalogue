@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { catalogueApi } from '../api/catalogue';
@@ -109,6 +109,23 @@ describe('search (R3)', () => {
     expect(
       await screen.findByText('No products match “unicorn”. Try a different term.'),
     ).toBeVisible();
+  });
+
+  it('keeps the search box in step with the address when going back', async () => {
+    vi.spyOn(catalogueApi, 'searchProducts').mockResolvedValue([jacket]);
+    const user = userEvent.setup();
+    const { router } = renderRoute('/');
+    const searchBox = () => screen.getByRole('searchbox', { name: 'Search products' });
+
+    await user.type(searchBox(), 'jacket');
+    await user.click(screen.getByRole('button', { name: 'Search' }));
+    await user.clear(searchBox());
+    await user.type(searchBox(), 'ring');
+    await user.click(screen.getByRole('button', { name: 'Search' }));
+    await act(() => router.navigate(-1));
+
+    expect(router.state.location.search).toBe('?q=jacket');
+    expect(searchBox()).toHaveValue('jacket');
   });
 });
 

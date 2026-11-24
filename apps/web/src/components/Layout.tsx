@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet } from 'react-router';
+import { Link, NavLink, Outlet, useSearchParams } from 'react-router';
 import { useCategories } from '../api/catalogue';
 import { BRAND } from '../config';
 import styles from './Layout.module.css';
@@ -8,6 +8,8 @@ import { SearchBar } from './SearchBar';
 export function Layout() {
   // If categories fail to load, the navigation is simply empty; the page itself still works.
   const { data: categories = [] } = useCategories();
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('q') ?? '';
 
   return (
     <>
@@ -16,7 +18,8 @@ export function Layout() {
           <Link to="/" className={styles.brand}>
             {BRAND.name}
           </Link>
-          <SearchBar />
+          {/* Keyed by the URL's term: Back, Forward or leaving the search page resets the box to match. */}
+          <SearchBar key={searchTerm} initialTerm={searchTerm} />
         </div>
 
         <nav aria-label="Categories" className={styles.nav}>
