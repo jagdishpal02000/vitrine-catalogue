@@ -10,8 +10,15 @@ export const UPSTREAM_TIMEOUT_MS = 5000;
 /** Top-rated products shown on a category page when the owner picked none in that category. */
 export const CATEGORY_TOP_RATED_FALLBACK_COUNT = 3;
 
-/** Longest search term we accept. */
-export const SEARCH_QUERY_MAX_LENGTH = 100;
+/** Longest value we accept for each input field. */
+export const FIELD_LIMITS = {
+  id: 64,
+  searchQuery: 100,
+  name: 100,
+  email: 254,
+  phone: 30,
+  message: 2000,
+} as const;
 
 const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;
 
