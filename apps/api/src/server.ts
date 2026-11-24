@@ -1,8 +1,9 @@
 import { createApp } from './app.js';
 import { config } from './config/env.js';
+import { createServices } from './container.js';
 import { logger } from './infra/logger.js';
 
-const server = createApp().listen(config.PORT, (error) => {
+const server = createApp(createServices()).listen(config.PORT, (error) => {
   if (error) throw error;
   logger.info(`Vitrine API listening on port ${config.PORT}`);
 });

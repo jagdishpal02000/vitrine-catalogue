@@ -1,9 +1,9 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
-import { createApp } from '../src/app.js';
+import { createTestApp } from './helpers.js';
 
 describe('app', () => {
-  const app = createApp();
+  const app = createTestApp();
 
   it('reports health', async () => {
     const response = await request(app).get('/api/health');

@@ -7,10 +7,10 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFound.js';
 import { createRateLimiter } from './middlewares/rateLimit.js';
 import { requestLogger } from './middlewares/requestLogger.js';
-import { createApiRouter } from './routes/index.js';
+import { createApiRouter, type Services } from './routes/index.js';
 
 /** Builds the Express app. Kept apart from server.ts so tests can use it without opening a port. */
-export function createApp() {
+export function createApp(services: Services) {
   const app = express();
   app.set('trust proxy', config.TRUST_PROXY);
 
@@ -19,7 +19,7 @@ export function createApp() {
   app.use(cors({ origin: config.CORS_ORIGINS }));
   app.use(express.json({ limit: JSON_BODY_LIMIT }));
 
-  app.use('/api', createRateLimiter(RATE_LIMITS.api), createApiRouter());
+  app.use('/api', createRateLimiter(RATE_LIMITS.api), createApiRouter(services));
 
   app.use(notFoundHandler);
   app.use(errorHandler);
