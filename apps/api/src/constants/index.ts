@@ -18,6 +18,7 @@ const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;
 /** Requests allowed per client IP in each time window. */
 export const RATE_LIMITS = {
   api: { windowMs: FIFTEEN_MINUTES_MS, limit: 300 },
+  enquiries: { windowMs: FIFTEEN_MINUTES_MS, limit: 5 },
 } as const;
 
 /** Machine-readable codes used in every error response. */
@@ -27,6 +28,7 @@ export const ERROR_CODES = {
   NOT_FOUND: 'NOT_FOUND',
   RATE_LIMITED: 'RATE_LIMITED',
   UPSTREAM_UNAVAILABLE: 'UPSTREAM_UNAVAILABLE',
+  EMAIL_FAILED: 'EMAIL_FAILED',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
 } as const;
 

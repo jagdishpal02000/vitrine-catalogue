@@ -22,6 +22,16 @@ const envSchema = z.object({
   FAKE_STORE_BASE_URL: z.url().default('https://fakestoreapi.com'),
   // The business owner's "top rated" picks, in display order. Defaults to the 5 best-rated Fake Store products.
   TOP_RATED_PRODUCT_IDS: commaSeparated('12,11,3,18,5'),
+  // Email goes over SMTP: Mailpit locally (port 1025, no auth), any SMTP provider such as AWS SES in production.
+  SMTP_HOST: z.string().min(1).default('localhost'),
+  SMTP_PORT: z.coerce.number().int().positive().default(1025),
+  SMTP_SECURE: z.stringbool().default(false),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASSWORD: z.string().optional(),
+  MAIL_FROM: z.email().default('vitrine@example.com'),
+  SALES_INBOX_EMAIL: z.email().default('sales@example.com'),
+  // Used for the product link in the enquiry email.
+  WEB_BASE_URL: z.url().default('http://localhost:8080'),
 });
 
 function loadConfig() {
