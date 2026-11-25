@@ -1,5 +1,6 @@
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
+import { ERROR_CODES } from '../constants/index.js';
 import {
   categoryPageSchema as CategoryPage,
   categorySchema as Category,
@@ -16,7 +17,11 @@ const registry = new OpenAPIRegistry();
 
 const ErrorResponse = z
   .object({
-    error: z.object({ code: z.string(), message: z.string(), details: z.unknown().optional() }),
+    error: z.object({
+      code: z.enum(ERROR_CODES).meta({ description: 'Stable: apps map this to their own text' }),
+      message: z.string().meta({ description: 'For developers, not for showing to end users' }),
+      details: z.unknown().optional(),
+    }),
   })
   .meta({ id: 'Error' });
 

@@ -17,13 +17,14 @@ describe('app', () => {
     expect((await request(app).get('/api/top-rated')).status).toBe(404);
   });
 
-  it('returns a JSON 404 for unknown routes', async () => {
-    const response = await request(app).get('/api/unknown');
+  it('returns a JSON 404 for unknown routes without echoing the request back', async () => {
+    const response = await request(app).get('/api/v1/internal-route');
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
-      error: { code: 'NOT_FOUND', message: 'Route not found: GET /api/unknown' },
+      error: { code: 'NOT_FOUND', message: 'The requested resource was not found' },
     });
+    expect(response.text).not.toContain('internal-route');
   });
 
   it('rejects a malformed JSON body with a 400', async () => {
