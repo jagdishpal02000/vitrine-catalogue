@@ -19,7 +19,7 @@ People should start with [README.md](README.md). The spec is in [docs/spec](docs
 - Services hold business rules. They are plain TypeScript and never import Express.
 - Repositories are the only code that knows a data source. Fake Store's data shape never leaves `fakeStore.product.repository.ts`.
 - `infra/` holds the technical adapters: logger, cache, HTTP client and mailer.
-- Wire dependencies in `container.ts` only. Use factory functions (`createXService(deps)`), not classes. The one exception is `AppError`.
+- Choose implementations (Fake Store, SMTP) only in `server.ts`, and pass them in. Use factory functions (`createXService(deps)`), not classes. The one exception is `AppError`.
 - The web app only talks to `/api`, never to Fake Store.
 - Public endpoints live under `/api/v1`. Never make a breaking change to v1; put it in a new `/v2` router. Only operational endpoints (`/api/health`) are unversioned.
 

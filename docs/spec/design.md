@@ -20,11 +20,11 @@ API: Express 5 (apps/api)
 
 Each expected change (C7) has one seam:
 
-| Expected change     | Seam                                                | What changes                                       |
-| ------------------- | --------------------------------------------------- | -------------------------------------------------- |
-| Product data source | `ProductRepository` interface                       | Add one repository file, wire it in `container.ts` |
-| Email provider      | `Mailer` interface, SMTP settings                   | Usually just env vars (most providers speak SMTP)  |
-| Look and feel       | `styles/theme.css` design tokens, `config.ts` brand | CSS and components; no data logic                  |
+| Expected change     | Seam                                                | What changes                                      |
+| ------------------- | --------------------------------------------------- | ------------------------------------------------- |
+| Product data source | `ProductRepository` interface                       | Add one repository file, choose it in `server.ts` |
+| Email provider      | `Mailer` interface, SMTP settings                   | Usually just env vars (most providers speak SMTP) |
+| Look and feel       | `styles/theme.css` design tokens, `config.ts` brand | CSS and components; no data logic                 |
 
 ## API layers
 
@@ -37,8 +37,8 @@ Each expected change (C7) has one seam:
 | Infra        | `infra/`                                                                    | Logger (winston), cache, HTTP client, mailer                          |
 | Shared       | `config/`, `constants/`, `models/`, `validators/`, `utils/`, `middlewares/` | Env, limits, zod schemas, helpers, cross-cutting middleware           |
 
-Dependencies are passed into factory functions (`createCatalogueService(repository, topRatedIds)`) and wired once in
-`container.ts`. Tests build the same objects with an in-memory repository and a fake mailer.
+Dependencies are passed into factory functions (`createCatalogueService(repository, topRatedIds)`) and wired once, in the
+entry point `server.ts`. Tests build the same objects with an in-memory repository and a fake mailer.
 
 ## API contract
 
