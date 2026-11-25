@@ -36,5 +36,5 @@ Requirement IDs refer to [requirements.md](requirements.md).
 - [x] T20 Docs: README, DECISIONS, AI_USAGE
 - [x] T21 Independent review pass and fixes
 - [x] T22 API versioning: public endpoints under `/api/v1`, health check unversioned
-- [ ] T23 Friendly error messages only (R6)
+- [x] T23 Friendly error messages only (R6)
 - [ ] T24 Pull request into `main`

@@ -76,6 +76,8 @@ The API is versioned in the URL, so every public endpoint is under `/api/v1`. A 
 
 Every error has the same shape: `{ "error": { "code", "message", "details"? } }`.
 
+`code` is the stable part, and `message` is for developers. The web app never shows either one. It maps each `code` to its own friendly text, uses one generic message for anything unexpected, and shows a friendly error page if a page crashes. Customers never see routes, codes or stack traces.
+
 ## Configuration
 
 Every variable is optional. [.env.example](.env.example) lists them all with their defaults. The most useful ones:
@@ -102,7 +104,7 @@ npm run dev                    # API on :3000, web on :5173 (Vite forwards /api 
 ## Quality checks
 
 ```bash
-npm run check   # ESLint (strict, type-aware), Prettier, TypeScript, and all 82 tests
+npm run check   # ESLint (strict, type-aware), Prettier, TypeScript, and all 95 tests
 ```
 
 - **API tests** (Vitest + supertest): business rules, the Fake Store adapter, and every endpoint's success and error paths.

@@ -76,7 +76,11 @@ Every error has one shape, produced only by the global error handler:
 }
 ```
 
-Upstream failures (Fake Store or email) return `502` with a friendly message. Internals are logged, never returned.
+Upstream failures (Fake Store or email) return `502` with a friendly message. Internals are logged, never returned, and
+error responses never echo the request back.
+
+`code` is the stable contract (OpenAPI lists every value), and `message` is for developers. Apps show their own text
+based on `code` (R6).
 
 ## Domain model
 
@@ -115,6 +119,10 @@ no request bodies or personal data in logs · secrets only via env.
 
 - Routes: `/`, `/categories/:slug`, `/search?q=`, `/products/:id`, and a catch-all not-found page.
 - `api/client.ts` is the only place that calls `fetch`. `api/catalogue.ts` holds typed calls and TanStack Query hooks.
+- **Error messages (R6).** `api/errors.ts` owns every word a customer sees when something fails.
+  - It maps the API's error `code` to friendly text, with one generic message for anything else. The API's wording is never displayed.
+  - Components show errors only through `getUserMessage()`.
+  - A page that crashes while rendering shows `ErrorPage` inside the layout, so the header still works.
 - Pages fetch data. Components (`ProductSection`, `ProductCard`, `EnquiryForm`, `QueryStatus`, `Layout`, `SearchBar`) display it.
 - Types in `api/types.ts` mirror the API contract on purpose: apps share a contract, not code, across the network.
 
