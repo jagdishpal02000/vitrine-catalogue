@@ -1,5 +1,6 @@
 import { useId, useState, type SubmitEvent } from 'react';
 import { useSendEnquiry } from '../api/catalogue';
+import { getUserMessage } from '../api/errors';
 import type { Product } from '../api/types';
 import styles from './EnquiryForm.module.css';
 
@@ -77,7 +78,7 @@ export function EnquiryForm({ product }: { product: Product }) {
 
       {sendEnquiry.isError && (
         <p role="alert" className={styles.error}>
-          {sendEnquiry.error.message}
+          {getUserMessage(sendEnquiry.error)}
         </p>
       )}
       <button type="submit" disabled={sendEnquiry.isPending}>

@@ -2,7 +2,8 @@ import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { catalogueApi } from '../api/catalogue';
-import { ApiError } from '../api/client';
+import { ApiError } from '../api/errors';
+import type { Product } from '../api/types';
 import { categories, hardDrive, jacket, mensClothing, tShirt } from './fixtures';
 import { renderRoute } from './renderRoute';
 
@@ -37,14 +38,53 @@ describe('app shell', () => {
 
   it('explains when products cannot be loaded', async () => {
     vi.spyOn(catalogueApi, 'getTopRated').mockRejectedValue(
-      new ApiError(502, 'A service we rely on is unavailable. Please try again shortly.'),
+      new ApiError(502, 'UPSTREAM_UNAVAILABLE'),
     );
 
     renderRoute('/');
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      'A service we rely on is unavailable',
+      "We can't load our products right now. Please try again in a moment.",
     );
+  });
+});
+
+describe('friendly errors only (R6)', () => {
+  it("never shows the API's wording or routes, only friendly text", async () => {
+    // Only fetch is stubbed here, so the real API client, hooks and components handle the failure.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve(
+          Response.json(
+            { error: { code: 'NOT_FOUND', message: 'Route not found: GET /api/v1/products/999' } },
+            { status: 404 },
+          ),
+        ),
+      ),
+    );
+
+    renderRoute('/products/999');
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      "Sorry, we couldn't find what you were looking for.",
+    );
+    expect(document.body).not.toHaveTextContent('/api');
+    expect(document.body).not.toHaveTextContent('Route not found');
+  });
+
+  it('shows a friendly error page, not the crash, when a page breaks', async () => {
+    // React reports caught render errors to the console; keep the test output clean.
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    // A malformed product makes the product page throw while rendering.
+    vi.spyOn(catalogueApi, 'getProduct').mockResolvedValue({} as Product);
+
+    renderRoute('/products/1');
+
+    expect(await screen.findByRole('heading', { name: 'Something went wrong' })).toBeVisible();
+    expect(document.body).not.toHaveTextContent('Cannot read properties');
+    // The page broke, not the layout, so the header still works.
+    expect(screen.getByRole('link', { name: 'Vitrine' })).toBeVisible();
   });
 });
 
@@ -144,11 +184,13 @@ describe('product page (R4)', () => {
   });
 
   it('says so when the product does not exist', async () => {
-    vi.spyOn(catalogueApi, 'getProduct').mockRejectedValue(new ApiError(404, 'Product not found'));
+    vi.spyOn(catalogueApi, 'getProduct').mockRejectedValue(new ApiError(404, 'NOT_FOUND'));
 
     renderRoute('/products/999');
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('Product not found');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      "Sorry, we couldn't find what you were looking for.",
+    );
   });
 });
 
@@ -181,13 +223,13 @@ describe('enquiry (R5)', () => {
   });
 
   it('shows the error, and no thank-you, when the enquiry cannot be sent', async () => {
-    vi.spyOn(catalogueApi, 'sendEnquiry').mockRejectedValue(
-      new ApiError(502, 'We could not send your enquiry. Please try again.'),
-    );
+    vi.spyOn(catalogueApi, 'sendEnquiry').mockRejectedValue(new ApiError(502, 'EMAIL_FAILED'));
 
     await fillInEnquiry();
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('We could not send your enquiry');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      "We couldn't send your enquiry just now. Please try again in a moment.",
+    );
     expect(screen.queryByText(/Thank you/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Send enquiry' })).toBeEnabled();
   });

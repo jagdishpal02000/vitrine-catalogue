@@ -33,21 +33,35 @@ describe('api client', () => {
     });
   });
 
-  it("turns an error response into an ApiError with the API's message", async () => {
-    stubFetch(Response.json({ error: { message: 'Product not found' } }, { status: 404 }));
+  it("shows friendly text for the error's code, never the API's own wording", async () => {
+    stubFetch(
+      Response.json(
+        { error: { code: 'NOT_FOUND', message: 'Route not found: GET /api/v1/products/999' } },
+        { status: 404 },
+      ),
+    );
 
     await expect(apiGet('/products/999')).rejects.toMatchObject({
       status: 404,
-      message: 'Product not found',
+      code: 'NOT_FOUND',
+      message: "Sorry, we couldn't find what you were looking for.",
     });
   });
 
-  it('uses a friendly message when the error did not come from our API', async () => {
+  it('uses a generic friendly message when the error did not come from our API', async () => {
     stubFetch(new Response('<html>Bad Gateway</html>', { status: 502 }));
 
     await expect(apiGet('/top-rated')).rejects.toMatchObject({
       status: 502,
-      message: 'Something went wrong. Please try again.',
+      message: 'Something went wrong on our side. Please try again in a moment.',
+    });
+  });
+
+  it('uses a generic friendly message when a success response is not valid JSON', async () => {
+    stubFetch(new Response('<!doctype html><title>Proxy page</title>', { status: 200 }));
+
+    await expect(apiGet('/top-rated')).rejects.toMatchObject({
+      message: 'Something went wrong on our side. Please try again in a moment.',
     });
   });
 
@@ -56,7 +70,7 @@ describe('api client', () => {
 
     await expect(apiGet('/top-rated')).rejects.toMatchObject({
       status: 0,
-      message: 'We could not reach the server. Check your connection and try again.',
+      message: "We couldn't reach our servers. Please check your connection and try again.",
     });
   });
 });

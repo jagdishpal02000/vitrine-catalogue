@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { ApiError } from './client';
+import { ApiError } from './errors';
 
 /** Data-fetching settings: reuse answers for a minute, and retry once, but only when a retry could help. */
 export function createQueryClient() {
