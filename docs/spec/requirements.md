@@ -46,6 +46,14 @@ the reasoning is in [DECISIONS.md](../../DECISIONS.md).
 - **R5.4** IF the email cannot be sent THE SYSTEM SHALL show an error and let the customer try again; it SHALL NOT show "Thank you".
 - **R5.5** THE SYSTEM SHALL accept at most 5 enquiries per IP address every 15 minutes.
 
+## R6 Friendly error messages (added in review)
+
+> The frontend should only show a user-friendly message, even when there is a 500 or something is broken: never an API route, or a controller or model name.
+
+- **R6.1** WHEN anything fails THE SYSTEM SHALL show the customer a friendly, non-technical message. It SHALL NOT show API routes, error codes, stack traces or the API's own wording.
+- **R6.2** IF a page breaks while rendering THE SYSTEM SHALL show a friendly error page with a way back, and keep the header working.
+- **R6.3** THE API SHALL NOT echo request details in its error responses, and SHALL keep technical detail in its logs.
+
 ## Constraints (from the brief)
 
 - **C1** A React web client and a Node.js (TypeScript) backend.
