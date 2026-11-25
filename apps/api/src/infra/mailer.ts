@@ -7,7 +7,7 @@ export interface MailMessage {
   text: string;
 }
 
-/** Anything that can send an email. To change provider, add an implementation and wire it in container.ts. */
+/** Anything that can send an email. To change provider, add an implementation and choose it in server.ts. */
 export interface Mailer {
   send(message: MailMessage): Promise<void>;
 }

@@ -7,7 +7,7 @@ import { createCategoryRouter } from './category.routes.js';
 import { createEnquiryRouter } from './enquiry.routes.js';
 import { createProductRouter } from './product.routes.js';
 
-/** The services the routes depend on. Built in container.ts, or with fakes in tests. */
+/** The services the routes depend on. Built in server.ts, or with fakes in tests. */
 export interface Services {
   catalogueService: CatalogueService;
   enquiryService: EnquiryService;
