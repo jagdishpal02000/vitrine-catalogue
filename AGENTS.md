@@ -27,10 +27,10 @@ People should start with [README.md](README.md). The spec is in [docs/spec](docs
 
 - TypeScript strict. No `any`, no non-null `!`, no `@ts-ignore`, and no disabled lint rule without a comment explaining why.
 - Validate every external input with zod at the boundary: requests (`validate()` in routes), env (`config/env.ts`) and upstream responses (`fetchJson`).
-- Throw expected errors as `new AppError(status, ERROR_CODES.X, message)`. Only the global error handler writes error responses. Never echo the request (paths, input) back in an error.
+- Throw expected errors as `new AppError(ERRORS.X)`. Every error the API can return is defined once in `ERRORS` (status, code, message); add new ones there. Only the global error handler writes error responses. Never echo the request (paths, input) back in an error.
 - The web app never shows an error's own text. Display errors with `getUserMessage()`, and add friendly copy for new API codes in `api/errors.ts`.
 - Log with `logger` (winston), never `console`. Never log request bodies or personal details.
-- Limits and magic numbers go in `constants/`. Configuration comes only from `config/env.ts`.
+- Limits, HTTP status codes (`HTTP_STATUS`) and every string a client can receive go in `constants/`. Log messages, the email template and the API docs stay next to their code. Tests assert literal values on purpose, so they catch an accidental change to a constant. Configuration comes only from `config/env.ts`.
 - Keep it simple. Reuse before writing anything new, and add no new dependency or abstraction without a clear need. Use small functions with descriptive names.
 - User-facing copy is in British English ("catalogue", "enquiry").
 
