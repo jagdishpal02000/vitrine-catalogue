@@ -1,3 +1,6 @@
+// The version of the API this app is built against. Moving to v2 is a deliberate change here.
+const API_BASE_PATH = '/api/v1';
+
 const FALLBACK_MESSAGE = 'Something went wrong. Please try again.';
 const OFFLINE_MESSAGE = 'We could not reach the server. Check your connection and try again.';
 
@@ -16,7 +19,7 @@ export class ApiError extends Error {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(`/api${path}`, init);
+    response = await fetch(`${API_BASE_PATH}${path}`, init);
   } catch {
     throw new ApiError(0, OFFLINE_MESSAGE);
   }

@@ -14,11 +14,11 @@ afterEach(() => {
 });
 
 describe('api client', () => {
-  it('calls our own /api and returns the JSON body', async () => {
+  it('calls our own versioned API and returns the JSON body', async () => {
     const fetchMock = stubFetch(Response.json([{ id: '1' }]));
 
     await expect(apiGet('/top-rated')).resolves.toEqual([{ id: '1' }]);
-    expect(fetchMock).toHaveBeenCalledWith('/api/top-rated', undefined);
+    expect(fetchMock).toHaveBeenCalledWith('/api/v1/top-rated', undefined);
   });
 
   it('sends JSON when posting', async () => {
@@ -26,7 +26,7 @@ describe('api client', () => {
 
     await apiPost('/enquiries', { name: 'Ada' });
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/enquiries', {
+    expect(fetchMock).toHaveBeenCalledWith('/api/v1/enquiries', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: '{"name":"Ada"}',

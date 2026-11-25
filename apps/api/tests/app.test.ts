@@ -5,11 +5,16 @@ import { createTestApp } from './helpers.js';
 describe('app', () => {
   const app = createTestApp();
 
-  it('reports health', async () => {
+  it('reports health at an unversioned path', async () => {
     const response = await request(app).get('/api/health');
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ status: 'ok' });
+  });
+
+  it('serves the public API only under a version', async () => {
+    expect((await request(app).get('/api/v1/top-rated')).status).toBe(200);
+    expect((await request(app).get('/api/top-rated')).status).toBe(404);
   });
 
   it('returns a JSON 404 for unknown routes', async () => {
@@ -32,7 +37,7 @@ describe('app', () => {
   });
 
   it('rejects a URL that cannot be decoded with a 400, not a 500', async () => {
-    const response = await request(app).get('/api/products/%E0');
+    const response = await request(app).get('/api/v1/products/%E0');
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({

@@ -1,4 +1,4 @@
-// Mirrors the API contract (see /api/docs). Kept apart from the API's code on purpose:
+// Mirrors the API contract (see /api/v1/docs). Kept apart from the API's code on purpose:
 // the web app and the API share a contract across the network, not code.
 
 export interface Category {

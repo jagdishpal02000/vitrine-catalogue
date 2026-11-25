@@ -5,12 +5,12 @@ import { createFakeMailer, createTestApp } from './helpers.js';
 
 const validEnquiry = { productId: '1', name: 'Ada Lovelace', email: 'ada@example.com' };
 
-describe('POST /api/enquiries', () => {
+describe('POST /api/v1/enquiries', () => {
   it('accepts a valid enquiry with a 202 and emails the sales inbox', async () => {
     const { mailer, sent } = createFakeMailer();
 
     const response = await request(createTestApp({ mailer }))
-      .post('/api/enquiries')
+      .post('/api/v1/enquiries')
       .send(validEnquiry);
 
     expect(response.status).toBe(202);
@@ -24,7 +24,7 @@ describe('POST /api/enquiries', () => {
     const { mailer, sent } = createFakeMailer();
 
     const response = await request(createTestApp({ mailer }))
-      .post('/api/enquiries')
+      .post('/api/v1/enquiries')
       .send({ productId: '1', name: '', email: 'not-an-email' });
 
     expect(response.status).toBe(400);
@@ -42,7 +42,7 @@ describe('POST /api/enquiries', () => {
 
   it('rejects fields it does not expect', async () => {
     const response = await request(createTestApp())
-      .post('/api/enquiries')
+      .post('/api/v1/enquiries')
       .send({ ...validEnquiry, isAdmin: true });
 
     expect(response.status).toBe(400);
@@ -50,7 +50,7 @@ describe('POST /api/enquiries', () => {
 
   it('returns a 404 for an unknown product', async () => {
     const response = await request(createTestApp())
-      .post('/api/enquiries')
+      .post('/api/v1/enquiries')
       .send({ ...validEnquiry, productId: '999' });
 
     expect(response.status).toBe(404);
@@ -60,7 +60,7 @@ describe('POST /api/enquiries', () => {
     const failingMailer: Mailer = { send: () => Promise.reject(new Error('SMTP down')) };
 
     const response = await request(createTestApp({ mailer: failingMailer }))
-      .post('/api/enquiries')
+      .post('/api/v1/enquiries')
       .send(validEnquiry);
 
     expect(response.status).toBe(502);
@@ -71,9 +71,9 @@ describe('POST /api/enquiries', () => {
     const app = createTestApp();
 
     for (let attempt = 1; attempt <= 5; attempt++) {
-      await request(app).post('/api/enquiries').send(validEnquiry).expect(202);
+      await request(app).post('/api/v1/enquiries').send(validEnquiry).expect(202);
     }
-    const response = await request(app).post('/api/enquiries').send(validEnquiry);
+    const response = await request(app).post('/api/v1/enquiries').send(validEnquiry);
 
     expect(response.status).toBe(429);
   });

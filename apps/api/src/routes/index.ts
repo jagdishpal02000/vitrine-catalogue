@@ -17,9 +17,22 @@ export interface Services {
 export function createApiRouter(services: Services): Router {
   const router = Router();
 
+  // Not versioned: Docker and load balancers check this, whichever API versions are live.
   router.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
+  router.use('/v1', createV1Router(services));
+
+  return router;
+}
+
+/**
+ * Version 1 of the public API. A breaking change goes in a new /v2 router mounted next to this one,
+ * so existing clients (such as a mobile app that cannot update instantly) keep working.
+ */
+function createV1Router(services: Services): Router {
+  const router = Router();
+
   router.get('/docs.json', (_req, res) => {
     res.json(openApiDocument);
   });

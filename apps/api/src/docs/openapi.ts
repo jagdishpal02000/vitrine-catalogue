@@ -26,16 +26,6 @@ const productSourceDown = error('The product data source is unavailable');
 
 registry.registerPath({
   method: 'get',
-  path: '/health',
-  tags: ['Operations'],
-  summary: 'Health check for Docker and load balancers',
-  responses: {
-    200: { description: 'The API is up', content: json(z.object({ status: z.literal('ok') })) },
-  },
-});
-
-registry.registerPath({
-  method: 'get',
   path: '/top-rated',
   tags: ['Products'],
   summary: "The business owner's top-rated picks, in display order (home page)",
@@ -110,12 +100,13 @@ registry.registerPath({
   },
 });
 
+/** The contract for version 1 of the API. The unversioned /api/health check is operational and not part of it. */
 export const openApiDocument = new OpenApiGeneratorV3(registry.definitions).generateDocument({
   openapi: '3.0.3',
   info: {
     title: 'Vitrine API',
-    version: '0.1.0',
+    version: '1.0.0',
     description: 'Product catalogue and enquiries for the Vitrine proof of concept.',
   },
-  servers: [{ url: '/api' }],
+  servers: [{ url: '/api/v1' }],
 });
