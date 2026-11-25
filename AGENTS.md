@@ -21,6 +21,7 @@ People should start with [README.md](README.md). The spec is in [docs/spec](docs
 - `infra/` holds the technical adapters: logger, cache, HTTP client and mailer.
 - Wire dependencies in `container.ts` only. Use factory functions (`createXService(deps)`), not classes. The one exception is `AppError`.
 - The web app only talks to `/api`, never to Fake Store.
+- Public endpoints live under `/api/v1`. Never make a breaking change to v1; put it in a new `/v2` router. Only operational endpoints (`/api/health`) are unversioned.
 
 ## Coding standards
 

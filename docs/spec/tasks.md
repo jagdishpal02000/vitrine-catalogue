@@ -35,4 +35,5 @@ Requirement IDs refer to [requirements.md](requirements.md).
 - [x] T19 Docker: API and web images, compose with Mailpit, `.env.example`
 - [x] T20 Docs: README, DECISIONS, AI_USAGE
 - [x] T21 Independent review pass and fixes
-- [ ] T22 Pull request into `main`
+- [x] T22 API versioning: public endpoints under `/api/v1`, health check unversioned
+- [ ] T23 Pull request into `main`

@@ -42,7 +42,14 @@ Dependencies are passed into factory functions (`createCatalogueService(reposito
 
 ## API contract
 
-Base path `/api`. Every response is JSON. Interactive docs: `/api/docs` (OpenAPI generated from the same zod schemas).
+Base path `/api/v1`, so the version is part of the URL. Every response is JSON. The interactive docs are at `/api/v1/docs`, generated as OpenAPI from the same zod schemas.
+
+**Versioning.**
+
+- v1 is mounted as its own router (`createV1Router` in `routes/index.ts`).
+- A breaking change ships as a new `/v2` router mounted beside it. v2 can reuse the same services; only the routes, validators and controllers that change are new. v1 keeps working until its clients have moved.
+- The version sits below `/api`, so nginx, CloudFront and the Vite proxy don't need to know about it.
+- The health check is operational, not part of the contract, so it stays unversioned at `/api/health`.
 
 | Method and path                  | Success                              | Errors             | Used by                                |
 | -------------------------------- | ------------------------------------ | ------------------ | -------------------------------------- |
@@ -52,7 +59,7 @@ Base path `/api`. Every response is JSON. Interactive docs: `/api/docs` (OpenAPI
 | `GET /categories`                | `200 Category[]`                     |                    | Navigation                             |
 | `GET /categories/:slug/products` | `200 { category, topRated, others }` | 404                | Category page                          |
 | `POST /enquiries`                | `202 { message }`                    | 400, 404, 429, 502 | Enquiry form                           |
-| `GET /health`                    | `200 { status: "ok" }`               |                    | Docker and load-balancer health checks |
+| `GET /api/health` (unversioned)  | `200 { status: "ok" }`               |                    | Docker and load-balancer health checks |
 
 Top rated and search sit outside `/products/` on purpose: product IDs are opaque strings, so `/products/:id`
 must not reserve words such as `search`. Every upstream-backed endpoint can also return `502`.

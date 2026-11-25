@@ -18,11 +18,11 @@ docker compose up --build
 
 The first build takes about a minute. Then open:
 
-| URL                            | What you'll find                                                 |
-| ------------------------------ | ---------------------------------------------------------------- |
-| http://localhost:8080          | The web app                                                      |
-| http://localhost:8025          | Mailpit, the local **sales inbox**, where enquiry emails arrive  |
-| http://localhost:8080/api/docs | The API docs (Swagger UI), generated from the validation schemas |
+| URL                               | What you'll find                                                 |
+| --------------------------------- | ---------------------------------------------------------------- |
+| http://localhost:8080             | The web app                                                      |
+| http://localhost:8025             | Mailpit, the local **sales inbox**, where enquiry emails arrive  |
+| http://localhost:8080/api/v1/docs | The API docs (Swagger UI), generated from the validation schemas |
 
 No `.env` file is needed, because every setting has a working default (see [.env.example](.env.example)). Stop the stack with `docker compose down`.
 
@@ -63,14 +63,16 @@ Browser ─► web (nginx) ─/api─► API: routes ─► controllers ─► s
 
 ## API
 
-| Endpoint                             | Returns                                                        |
-| ------------------------------------ | -------------------------------------------------------------- |
-| `GET /api/top-rated`                 | The owner's top-rated products, in order                       |
-| `GET /api/search?q=term`             | Products matching every word of the term                       |
-| `GET /api/products/:id`              | One product (404 if unknown)                                   |
-| `GET /api/categories`                | Every category                                                 |
-| `GET /api/categories/:slug/products` | `{ category, topRated, others }`                               |
-| `POST /api/enquiries`                | 202 once the email is accepted; 400, 404, 429 or 502 otherwise |
+The API is versioned in the URL, so every public endpoint is under `/api/v1`. A future breaking change can ship as `/api/v2` while existing clients, such as a mobile app that can't update straight away, keep using v1. The health check stays unversioned at `/api/health`, so Docker and load balancers never need to change.
+
+| Endpoint                                | Returns                                                        |
+| --------------------------------------- | -------------------------------------------------------------- |
+| `GET /api/v1/top-rated`                 | The owner's top-rated products, in order                       |
+| `GET /api/v1/search?q=term`             | Products matching every word of the term                       |
+| `GET /api/v1/products/:id`              | One product (404 if unknown)                                   |
+| `GET /api/v1/categories`                | Every category                                                 |
+| `GET /api/v1/categories/:slug/products` | `{ category, topRated, others }`                               |
+| `POST /api/v1/enquiries`                | 202 once the email is accepted; 400, 404, 429 or 502 otherwise |
 
 Every error has the same shape: `{ "error": { "code", "message", "details"? } }`.
 
@@ -100,7 +102,7 @@ npm run dev                    # API on :3000, web on :5173 (Vite forwards /api 
 ## Quality checks
 
 ```bash
-npm run check   # ESLint (strict, type-aware), Prettier, TypeScript, and all 81 tests
+npm run check   # ESLint (strict, type-aware), Prettier, TypeScript, and all 82 tests
 ```
 
 - **API tests** (Vitest + supertest): business rules, the Fake Store adapter, and every endpoint's success and error paths.
