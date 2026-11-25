@@ -1,4 +1,4 @@
-import { CATEGORY_TOP_RATED_FALLBACK_COUNT, ERROR_CODES } from '../constants/index.js';
+import { CATEGORY_TOP_RATED_FALLBACK_COUNT, ERRORS } from '../constants/index.js';
 import { logger } from '../infra/logger.js';
 import type { CategoryPage, Product } from '../models/product.model.js';
 import type { ProductRepository } from '../repositories/product.repository.js';
@@ -30,7 +30,7 @@ export function createCatalogueService(
     async getCategoryPage(slug: string): Promise<CategoryPage> {
       const categories = await productRepository.findCategories();
       const category = categories.find((item) => item.slug === slug);
-      if (!category) throw new AppError(404, ERROR_CODES.NOT_FOUND, 'Category not found');
+      if (!category) throw new AppError(ERRORS.CATEGORY_NOT_FOUND);
 
       const products = await productRepository.findByCategory(slug);
       const picks = pickInOrder(products, topRatedIds);
@@ -42,7 +42,7 @@ export function createCatalogueService(
 
     async getProduct(id: string): Promise<Product> {
       const product = await productRepository.findById(id);
-      if (!product) throw new AppError(404, ERROR_CODES.NOT_FOUND, 'Product not found');
+      if (!product) throw new AppError(ERRORS.PRODUCT_NOT_FOUND);
       return product;
     },
 

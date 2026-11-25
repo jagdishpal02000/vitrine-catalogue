@@ -1,4 +1,4 @@
-import { ERROR_CODES } from '../constants/index.js';
+import { ERRORS } from '../constants/index.js';
 import { logger } from '../infra/logger.js';
 import type { Mailer } from '../infra/mailer.js';
 import type { Product } from '../models/product.model.js';
@@ -24,7 +24,7 @@ export function createEnquiryService({
     async submitEnquiry(enquiry: Enquiry): Promise<void> {
       // Look the product up ourselves rather than trusting product details sent by the browser.
       const product = await productRepository.findById(enquiry.productId);
-      if (!product) throw new AppError(404, ERROR_CODES.NOT_FOUND, 'Product not found');
+      if (!product) throw new AppError(ERRORS.PRODUCT_NOT_FOUND);
 
       try {
         await mailer.send({
@@ -35,11 +35,7 @@ export function createEnquiryService({
         });
       } catch (error) {
         logger.error(`Enquiry email for product ${product.id} failed: ${getErrorMessage(error)}`);
-        throw new AppError(
-          502,
-          ERROR_CODES.EMAIL_FAILED,
-          'We could not send your enquiry. Please try again.',
-        );
+        throw new AppError(ERRORS.EMAIL_FAILED);
       }
 
       logger.info(`Enquiry for product ${product.id} sent to the sales inbox`);

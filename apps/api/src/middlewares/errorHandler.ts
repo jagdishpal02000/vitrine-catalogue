@@ -1,5 +1,5 @@
 import type { ErrorRequestHandler, Request } from 'express';
-import { ERROR_CODES } from '../constants/index.js';
+import { ERRORS, HTTP_STATUS } from '../constants/index.js';
 import { logger } from '../infra/logger.js';
 import { AppError, getErrorMessage } from '../utils/errors.js';
 
@@ -24,14 +24,15 @@ function toAppError(error: unknown, req: Request): AppError {
   if (error instanceof AppError) return error;
 
   if (isClientError(error)) {
-    return new AppError(error.status, ERROR_CODES.BAD_REQUEST, 'The request could not be read');
+    // Keep Express's own status (400, or 413 for a body that is too large).
+    return new AppError({ ...ERRORS.BAD_REQUEST, status: error.status });
   }
 
   // Unexpected: log the details for us, return a generic message to the client.
   logger.error(`Unhandled error on ${req.method} ${req.path}: ${getErrorMessage(error)}`, {
     stack: error instanceof Error ? error.stack : undefined,
   });
-  return new AppError(500, ERROR_CODES.INTERNAL_ERROR, 'Something went wrong. Please try again.');
+  return new AppError(ERRORS.INTERNAL_ERROR);
 }
 
 /**
@@ -44,7 +45,7 @@ function isClientError(error: unknown): error is { status: number } {
     error !== null &&
     'status' in error &&
     typeof error.status === 'number' &&
-    error.status >= 400 &&
-    error.status < 500
+    error.status >= HTTP_STATUS.BAD_REQUEST &&
+    error.status < HTTP_STATUS.INTERNAL_SERVER_ERROR
   );
 }

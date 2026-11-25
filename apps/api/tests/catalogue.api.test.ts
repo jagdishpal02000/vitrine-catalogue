@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
+import { ERRORS } from '../src/constants/index.js';
 import { AppError } from '../src/utils/errors.js';
 import { mensJacket, mensTShirt, silverBracelet, womensRainJacket } from './fixtures.js';
 import { createTestApp } from './helpers.js';
@@ -16,8 +17,7 @@ describe('GET /api/v1/top-rated', () => {
 
   it('returns a 502 when the product source is down', async () => {
     const app = createTestApp({
-      loadProducts: () =>
-        Promise.reject(new AppError(502, 'UPSTREAM_UNAVAILABLE', 'Service unavailable')),
+      loadProducts: () => Promise.reject(new AppError(ERRORS.UPSTREAM_UNAVAILABLE)),
     });
 
     const response = await request(app).get('/api/v1/top-rated');

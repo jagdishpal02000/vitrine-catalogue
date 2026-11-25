@@ -1,6 +1,6 @@
 import type { Request, RequestHandler } from 'express';
 import type { z } from 'zod';
-import { ERROR_CODES } from '../constants/index.js';
+import { ERRORS } from '../constants/index.js';
 import { AppError } from '../utils/errors.js';
 
 interface RequestSchemas {
@@ -32,12 +32,7 @@ function parse(schema: z.ZodType, data: unknown): unknown {
       field: issue.path.join('.'),
       message: issue.message,
     }));
-    throw new AppError(
-      400,
-      ERROR_CODES.VALIDATION_ERROR,
-      'Some of the details you sent are not valid',
-      details,
-    );
+    throw new AppError(ERRORS.VALIDATION_ERROR, details);
   }
   return result.data;
 }

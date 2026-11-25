@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { ERROR_CODES, UPSTREAM_TIMEOUT_MS } from '../constants/index.js';
+import { ERRORS, UPSTREAM_TIMEOUT_MS } from '../constants/index.js';
 import { AppError, getErrorMessage } from '../utils/errors.js';
 import { logger } from './logger.js';
 
@@ -15,10 +15,6 @@ export async function fetchJson<T>(url: string, schema: z.ZodType<T>): Promise<T
     return schema.parse(await response.json());
   } catch (error) {
     logger.error(`Upstream request to ${url} failed: ${getErrorMessage(error)}`);
-    throw new AppError(
-      502,
-      ERROR_CODES.UPSTREAM_UNAVAILABLE,
-      'A service we rely on is unavailable. Please try again shortly.',
-    );
+    throw new AppError(ERRORS.UPSTREAM_UNAVAILABLE);
   }
 }
