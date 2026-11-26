@@ -46,7 +46,7 @@ No `.env` file is needed, because every setting has a working default (see [.env
 ## How it is organised
 
 ```
-apps/api/      Express API: routes → controllers → services → repositories, plus infra (logger, cache, mailer)
+apps/api/      Express API: routes → controllers → services → repositories, plus infra (logger, cache, HTTP client, mailer)
 apps/web/      React app: pages, components and the API client
 docs/spec/     requirements, design and task plan, written before the code
 AGENTS.md      rules for AI coding agents (CLAUDE.md imports it)
@@ -107,8 +107,8 @@ npm run dev                    # API on :3000, web on :5173 (Vite forwards /api 
 npm run check   # ESLint (strict, type-aware), Prettier, TypeScript, and all 95 tests
 ```
 
-- **API tests** (Vitest + supertest): business rules, the Fake Store adapter, and every endpoint's success and error paths.
-- **Web tests** (React Testing Library): one journey per acceptance criterion, run through the real routes with only the API stubbed.
+- **API tests** (Vitest + supertest): business rules, the Fake Store adapter, and every endpoint's success and error paths. `apps/api/tests/` mirrors `src/`, so each test sits at the same path as the file it tests.
+- **Web tests** (React Testing Library): one journey per acceptance criterion, run through the real routes with only the API stubbed, plus unit tests next to the file they test.
 - **Git hooks** (Husky):
   - on commit: lint and format the staged files, and check the message follows Conventional Commits (commitlint);
   - before push: typecheck and tests.
@@ -116,12 +116,15 @@ npm run check   # ESLint (strict, type-aware), Prettier, TypeScript, and all 95 
 
 ## Time spent
 
-About **3 hours** in total. The building phase can be checked against the commit timestamps.
+**10+ hours** in total, over three days (24–26 November 2026). Most of it went into planning and review rather than writing code: the build itself took about 35 minutes, as the commit timestamps show.
 
-| Phase                                                                                               | Time    |
-| --------------------------------------------------------------------------------------------------- | ------- |
-| Planning: reading the brief, probing Fake Store, researching AI-assisted engineering practice, spec | ~1 h    |
-| Building, tests first: API, web, Docker                                                             | ~35 min |
-| Testing and checking it works end to end: live Fake Store, Mailpit, Docker                          | ~20 min |
-| Independent code review and fixes                                                                   | ~20 min |
-| Documentation and my own review of every commit                                                     | ~45 min |
+| Phase                                                                                                                     | Time        |
+| ------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Planning: reading the brief, probing Fake Store, researching AI-assisted engineering practice, agreeing the plan and spec | ~2 h        |
+| Building with Claude Code, tests first: API, web, Docker                                                                  | ~35 min     |
+| Testing it end to end: live Fake Store, Mailpit, Docker                                                                   | ~30 min     |
+| Independent code review and fixes                                                                                         | ~20 min     |
+| My line-by-line review of every commit                                                                                    | ~3.5 h      |
+| Changes from my review: API versioning, friendly errors only, the error catalogue, simpler wiring, the test layout        | ~2.5 h      |
+| Documentation: README, DECISIONS, AI_USAGE and the pull request                                                           | ~1 h        |
+| **Total**                                                                                                                 | **~10.5 h** |
