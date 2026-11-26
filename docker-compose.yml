@@ -1,0 +1,38 @@
+# The whole stack, as a reviewer runs it:  docker compose up --build
+#   http://localhost:8080           the web app (nginx forwards /api to the API)
+#   http://localhost:8080/api/v1/docs  the API docs (Swagger UI)
+#   http://localhost:8025           Mailpit: the "sales inbox" where enquiry emails arrive
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - '8080:80'
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    # Optional overrides (see .env.example). Not published on the host: it is reached through the web container.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      NODE_ENV: production
+      TRUST_PROXY: 1
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+    depends_on:
+      - mailpit
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit:v1.34
+    ports:
+      - '8025:8025'
+    restart: unless-stopped
