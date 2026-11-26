@@ -1,5 +1,7 @@
+import express, { type RequestHandler } from 'express';
 import { createApp } from '../src/app.js';
 import type { MailMessage, Mailer } from '../src/infra/mailer.js';
+import { errorHandler } from '../src/middlewares/errorHandler.js';
 import type { Product } from '../src/models/product.model.js';
 import { createInMemoryProductRepository } from '../src/repositories/inMemory.product.repository.js';
 import { createCatalogueService } from '../src/services/catalogue.service.js';
@@ -41,4 +43,15 @@ export function createTestApp({
       webBaseUrl: 'http://localhost:8080',
     }),
   });
+}
+
+/** A tiny app with one route that echoes what it received, so each middleware is tested on its own. */
+export function createEchoApp(...middlewares: RequestHandler[]) {
+  const app = express();
+  app.use(express.json());
+  app.post('/echo', ...middlewares, (req, res) => {
+    res.json({ query: req.query, body: req.body as unknown });
+  });
+  app.use(errorHandler);
+  return app;
 }

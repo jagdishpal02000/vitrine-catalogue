@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createMemoryCache } from '../src/infra/cache.js';
+import { createMemoryCache } from '../../src/infra/cache.js';
 
 describe('createMemoryCache', () => {
   afterEach(() => {

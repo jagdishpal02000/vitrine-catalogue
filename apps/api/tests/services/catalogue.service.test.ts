@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { logger } from '../src/infra/logger.js';
-import { createInMemoryProductRepository } from '../src/repositories/inMemory.product.repository.js';
-import { createCatalogueService } from '../src/services/catalogue.service.js';
+import { logger } from '../../src/infra/logger.js';
+import { createInMemoryProductRepository } from '../../src/repositories/inMemory.product.repository.js';
+import { createCatalogueService } from '../../src/services/catalogue.service.js';
 import {
   hardDrive,
   keyboard,
@@ -11,7 +11,7 @@ import {
   products,
   silverBracelet,
   usbCable,
-} from './fixtures.js';
+} from '../fixtures.js';
 
 const repository = createInMemoryProductRepository(() => Promise.resolve(products));
 

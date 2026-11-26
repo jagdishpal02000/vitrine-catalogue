@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
-import type { Mailer } from '../src/infra/mailer.js';
-import { createFakeMailer, createTestApp } from './helpers.js';
+import type { Mailer } from '../../src/infra/mailer.js';
+import { createFakeMailer, createTestApp } from '../helpers.js';
 
 const validEnquiry = { productId: '1', name: 'Ada Lovelace', email: 'ada@example.com' };
 

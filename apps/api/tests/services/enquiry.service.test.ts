@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import type { Mailer } from '../src/infra/mailer.js';
-import { createInMemoryProductRepository } from '../src/repositories/inMemory.product.repository.js';
-import { createEnquiryService } from '../src/services/enquiry.service.js';
-import { products } from './fixtures.js';
-import { createFakeMailer } from './helpers.js';
+import type { Mailer } from '../../src/infra/mailer.js';
+import { createInMemoryProductRepository } from '../../src/repositories/inMemory.product.repository.js';
+import { createEnquiryService } from '../../src/services/enquiry.service.js';
+import { products } from '../fixtures.js';
+import { createFakeMailer } from '../helpers.js';
 
 const repository = createInMemoryProductRepository(() => Promise.resolve(products));
 
