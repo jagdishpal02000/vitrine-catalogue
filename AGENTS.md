@@ -40,6 +40,7 @@ People should start with [README.md](README.md). The spec is in [docs/spec](docs
 - Never delete, skip or weaken a failing test to make it pass. Fix the code, or stop and ask.
 - API: Vitest unit tests for services and utils, and supertest HTTP tests through `createApp()` with the in-memory repository and a fake mailer.
 - Web: React Testing Library through the real routes (`renderRoute()`), with API calls stubbed via `vi.spyOn(catalogueApi, ...)`.
+- Name each test file after the file it tests. API: `tests/` mirrors `src/` (`src/services/catalogue.service.ts` → `tests/services/catalogue.service.test.ts`), and endpoint tests go in `tests/routes/`, named after the route file. Web: tests sit next to the file they test, and journey tests are in `src/test/`.
 
 ## Git
 

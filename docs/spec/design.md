@@ -134,6 +134,11 @@ no request bodies or personal data in logs · secrets only via env.
 | API HTTP | Vitest + supertest on `createApp()` | every endpoint's success and error paths, error shape, rate limit, docs          |
 | Web      | Vitest + React Testing Library      | one journey per acceptance criterion through the real routes                     |
 
+Each test file is named after the file it tests. In the API, `tests/` mirrors `src/`: the tests for
+`src/services/catalogue.service.ts` are in `tests/services/catalogue.service.test.ts`, and the endpoint tests are in
+`tests/routes/`, one file per route file. In the web app, tests sit next to the file they test, and the journey tests
+are in `src/test/`.
+
 ## Running and deploying
 
 - Locally: `docker compose up --build` runs `web` (nginx serving the build and proxying `/api`), `api` and `mailpit`.
